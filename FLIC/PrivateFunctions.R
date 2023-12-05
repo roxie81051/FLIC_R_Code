@@ -700,16 +700,19 @@ Feeding.DurationSummary.Well<-function(dfm,well,range=c(0,0)){
     if(!is.data.frame(adurs)){
       a<-NA
       aa<-NA
+      aaa<-NA
     }
     else {
       adurs<-adurs[(adurs$Minutes>range[1]) & (adurs$Minutes<=range[2]),]  
       if(nrow(adurs)==0){
         a<-NA
         aa<-NA
+        aaa<-NA
       }
       else {    
         a<-mean(adurs$Duration)
         aa<-median(adurs$Duration)  
+        aaa<-sum(adurs$Duration)
       }
     }
   }
@@ -717,17 +720,19 @@ Feeding.DurationSummary.Well<-function(dfm,well,range=c(0,0)){
     if(!is.data.frame(adurs)){
       a<-NA
       aa<-NA
+      aaa<-NA
     } else {
       a<-mean(adurs$Duration)  
       aa<-median(adurs$Duration)
+      aaa<-sum(adurs$Duration)
     }
   }
   
   if(is.na(a)||is.nan(a)) a<-NA
   if(is.na(aa)||is.nan(aa)) aa<-NA
-  tmp<-data.frame(a,aa)
-  
-  names(tmp)<-c("MeanDur","MedianDur")
+  if(is.na(aaa)||is.nan(aaa)) aaa<-NA
+  tmp<-data.frame(a,aa,aaa)
+  names(tmp)<-c("MeanDur","MedianDur","TotalDur")
   tmp
 }
 Feeding.IntensitySummary.Well<-function(dfm,well,range=c(0,0)){
@@ -795,7 +800,7 @@ Feeding.Summary.TwoWell<-function(dfm,range=c(0,0),TransformLicks=TRUE){
     intensity.a<-Feeding.IntensitySummary.Well(dfm,wellA,range)
     dur.a<-Feeding.DurationSummary.Well(dfm,wellA,range)  
     FLicks.a<-Feeding.TotalLicks.Well(dfm,wellA,range)
-    FEvents.a<-Feeding.TotalEvents.Well(dfm,wellA,range)    
+    FEvents.a<-Feeding.TotalEvents.Well(dfm,wellA,range) 
     
     interval.b<-Feeding.IntervalSummary.Well(dfm,wellB,range)
     intensity.b<-Feeding.IntensitySummary.Well(dfm,wellB,range)
@@ -816,7 +821,7 @@ Feeding.Summary.TwoWell<-function(dfm,range=c(0,0),TransformLicks=TRUE){
     }
   }
   names(result)<-c("DFM","Chamber","PI","EventPI","LicksA","LicksB","EventsA","EventsB","MeanDurationA","MedDurationA",
-                   "MeanDurationB","MedDurationB","MeanTimeBtwA","MedTimeBtwA",
+                   "TotalDurationA","MeanDurationB","MedDurationB","TotalDurationB","MeanTimeBtwA","MedTimeBtwA",
                    "MeanTimeBtwB","MedTimeBtwB","MeanIntA","MedianIntA","MinIntA","MaxIntA",
                    "MeanIntB","MedianIntB","MinIntB","MaxIntB","StartMin","EndMin")
   if(TransformLicks==TRUE){
